@@ -1,0 +1,20 @@
+{
+        "name": "emrdev/symfony-dropzone",
+    "description": "Symfony Form Type",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Emrdev\\SymfonyDropzone\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Emomaliev Mohammed",
+            "email": "emrdev@outlook.com"
+        }
+    ],
+    "require": {
+        "symfony/dependency-injection": ">4.3"
+    }
+}

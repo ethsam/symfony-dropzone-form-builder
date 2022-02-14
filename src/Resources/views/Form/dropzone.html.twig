@@ -1,0 +1,51 @@
+{% block dropzone_widget %}
+
+    {{ block('form_widget') }}
+    <script>
+        $(function () {
+            let dropzoneId = '{{ id|default(0) }}_dropzone';
+            let dropzoneElement = document.getElementById(dropzoneId);
+            function getHtml(id) {
+                return `<input type="hidden" name="interest[userFiles][dropzone][]" value="${id}">`;
+            }
+            let myDropzone = new Dropzone(dropzoneElement, {
+                url: '{{ path('uploadhandler') }}',
+                maxFilesize: '{{ maxFiles }}',
+                addRemoveLinks: true,
+                init: function () {
+                    var myDropzone = this;
+                    {% for file in files %}
+                        var mockFile = {
+                            id: '{{ file.id }}',
+                            name: '{{ file.filename }}',
+                            size: '{{ file.size }}',
+                            type: '{{ file.mimetype }}',
+                            status: Dropzone.ADDED,
+                            url: '{{ file.src }}'
+                        };
+                        myDropzone.emit("addedfile", mockFile);
+                        myDropzone.emit("thumbnail", mockFile, '{{ file.src }}');
+                        myDropzone.emit("complete", mockFile);
+                        myDropzone.files.push(mockFile);
+                    {% endfor %}
+
+                    this.on('success', function (file, result) {
+                        if (result.id) {
+                            let addHtml = getHtml(result.id);
+                            file.id = result.id;
+                            $('#' + dropzoneId).closest('.form-group').append(addHtml);
+                        }
+                    });
+                },
+                removedfile: function (file) {
+                    if (file.id) {
+                        uri = '{{ path('removeHandler',{'id': 'file_id' }) }}';
+                        $.get(uri.replace("file_id", file.id))
+                    }
+                    file.previewElement.remove();
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
