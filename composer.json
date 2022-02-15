@@ -1,5 +1,5 @@
 {
-        "name": "emrdev/symfony-dropzone",
+    "name": "emrdev/symfony-dropzone",
     "description": "Symfony Form Type",
     "type": "library",
     "license": "MIT",

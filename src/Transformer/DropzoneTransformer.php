@@ -25,10 +25,11 @@ class DropzoneTransformer implements DataTransformerInterface
 
     public function reverseTransform($value)
     {
+
         if ($this->options['maxFiles'] === 1) {
-            return $this->entityManager->getRepository(File::class)->findOneBy(['id' => $value['dropzone']]);
+            return $this->entityManager->getRepository($this->options['class'])->findOneBy(['id' => $value['dropzone']]);
         }
 
-        return $this->entityManager->getRepository(File::class)->findBy(['id' => $value['dropzone']]);
+        return $this->entityManager->getRepository($this->options['class'])->findBy(['id' => $value['dropzone']]);
     }
 }

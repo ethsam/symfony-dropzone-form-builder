@@ -1,51 +1,111 @@
 {% block dropzone_widget %}
-
     {{ block('form_widget') }}
     <script>
-        $(function () {
+        (function () {
             let dropzoneId = '{{ id|default(0) }}_dropzone';
             let dropzoneElement = document.getElementById(dropzoneId);
-            function getHtml(id) {
-                return `<input type="hidden" name="interest[userFiles][dropzone][]" value="${id}">`;
+            function initPrototype(id) {
+                element = document.createElement('input');
+                element.type = 'hidden';
+                element.name = 'interest[userFiles][dropzone][]';
+                element.value = id;
+                dropzoneElement.closest('.form-group').append(element);
             }
+            options = {};
+            {% if maxFiles %}
+              options.maxFiles = {{ maxFiles }};
+            {% endif %}
+            {% if method %}
+              options.method = '{{ method }}';
+            {% endif %}
+            {% if withCredentials %}
+              options.withCredentials = {{ withCredentials }};
+            {% endif %}
+            {% if thumbnailWidth %}
+              options.thumbnailWidth = {{ thumbnailWidth }};
+            {% endif %}
+            {% if thumbnailHeight %}
+              options.thumbnailHeight = {{ thumbnailHeight }};
+            {% endif %}
+            {% if thumbnailMethod %}
+              options.thumbnailMethod = '{{ thumbnailMethod }}';
+            {% endif %}
+            {% if resizeWidth %}
+              options.resizeWidth = {{ resizeWidth }};
+            {% endif %}
+            {% if resizeHeight %}
+              options.resizeHeight = {{ resizeHeight }};
+            {% endif %}
+            {% if resizeMimeType %}
+              options.resizeMimeType = {{ resizeMimeType }};
+            {% endif %}
+            {% if resizeMethod %}
+              options.resizeMethod = '{{ resizeMethod }}';
+            {% endif %}
+            {% if filesizeBase %}
+              options.filesizeBase = {{ filesizeBase }};
+            {% endif %}
+            {% if headers %}
+              options.headers = '{{ headers }}';
+            {% endif %}
+            {% if clickable %}
+              options.clickable = {{ clickable }};
+            {% endif %}
+            {% if ignoreHiddenFiles %}
+              options.ignoreHiddenFiles = {{ ignoreHiddenFiles }};
+            {% endif %}
+            {% if acceptedFiles %}
+              options.acceptedFiles = '{{ acceptedFiles }}';
+            {% endif %}
+            {% if autoProcessQueue %}
+              options.autoProcessQueue = {{ autoProcessQueue }};
+            {% endif %}
+            {% if autoQueue %}
+              options.autoQueue = {{ autoQueue }};
+            {% endif %}
+            {% if addRemoveLinks %}
+              options.addRemoveLinks = {{ addRemoveLinks }};
+            {% endif %}
+            {% if previewsContainer %}
+              options.previewsContainer = '{{ previewsContainer }}';
+            {% endif %}
             let myDropzone = new Dropzone(dropzoneElement, {
                 url: '{{ path('uploadhandler') }}',
-                maxFilesize: '{{ maxFiles }}',
-                addRemoveLinks: true,
+                options,
                 init: function () {
                     var myDropzone = this;
                     {% for file in files %}
+                       src = '{{ attribute(file, choice_src)}}';
                         var mockFile = {
                             id: '{{ file.id }}',
                             name: '{{ file.filename }}',
                             size: '{{ file.size }}',
                             type: '{{ file.mimetype }}',
                             status: Dropzone.ADDED,
-                            url: '{{ file.src }}'
+                            url: src
                         };
                         myDropzone.emit("addedfile", mockFile);
-                        myDropzone.emit("thumbnail", mockFile, '{{ file.src }}');
+                        myDropzone.emit("thumbnail", mockFile, src);
                         myDropzone.emit("complete", mockFile);
                         myDropzone.files.push(mockFile);
+                       initPrototype('{{ file.id }}');
                     {% endfor %}
 
                     this.on('success', function (file, result) {
                         if (result.id) {
-                            let addHtml = getHtml(result.id);
-                            file.id = result.id;
-                            $('#' + dropzoneId).closest('.form-group').append(addHtml);
+                           initPrototype(result.id);
                         }
                     });
                 },
                 removedfile: function (file) {
                     if (file.id) {
                         uri = '{{ path('removeHandler',{'id': 'file_id' }) }}';
-                        $.get(uri.replace("file_id", file.id))
+                        fetch(uri.replace("file_id", file.id))
                     }
                     file.previewElement.remove();
                 }
             });
-        });
+        })();
     </script>
 
 {% endblock %}
