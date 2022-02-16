@@ -7,7 +7,11 @@
             function initPrototype(id) {
                 element = document.createElement('input');
                 element.type = 'hidden';
-                element.name = 'interest[userFiles][dropzone][]';
+                {% if not multiple %}
+                   element.name = 'interest[{{ name }}][dropzone]';
+                {% else %}
+                   element.name = 'interest[{{ name }}][dropzone][]';
+                {% endif %}
                 element.value = id;
                 dropzoneElement.closest('.form-group').append(element);
             }
@@ -48,9 +52,6 @@
             {% if headers %}
               options.headers = '{{ headers }}';
             {% endif %}
-            {% if clickable %}
-              options.clickable = {{ clickable }};
-            {% endif %}
             {% if ignoreHiddenFiles %}
               options.ignoreHiddenFiles = {{ ignoreHiddenFiles }};
             {% endif %}
@@ -70,8 +71,8 @@
               options.previewsContainer = '{{ previewsContainer }}';
             {% endif %}
             let myDropzone = new Dropzone(dropzoneElement, {
-                url: '{{ path('uploadhandler') }}',
-                options,
+                url: '{{ path(uploadHandler) }}',
+                ...options,
                 init: function () {
                     var myDropzone = this;
                     {% for file in files %}
@@ -99,7 +100,7 @@
                 },
                 removedfile: function (file) {
                     if (file.id) {
-                        uri = '{{ path('removeHandler',{'id': 'file_id' }) }}';
+                        uri = '{{ path(removeHandler,{'id': 'file_id' }) }}';
                         fetch(uri.replace("file_id", file.id))
                     }
                     file.previewElement.remove();

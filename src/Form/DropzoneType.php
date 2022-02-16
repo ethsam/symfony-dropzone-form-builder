@@ -50,6 +50,7 @@ class DropzoneType extends AbstractType
         $resolver->setDefaults([
             'class' => null,
             'choice_src' => 'src',
+            'multiple' => true,
             'maxFiles' => 1,
             'uploadHandler' => null,
             'removeHandler' => null,
@@ -64,7 +65,6 @@ class DropzoneType extends AbstractType
             'resizeMethod' => "contain",
             'filesizeBase' => 1024,
             'headers' => null,
-            'clickable' => true,
             'ignoreHiddenFiles' => true,
             'acceptedFiles' => null,
             'autoProcessQueue' => true,
@@ -89,31 +89,32 @@ class DropzoneType extends AbstractType
 
         $view->vars['formName'] = $f->parent->vars['name'];
         $view->vars['id'] = $this->dashesToCamelCase($f->vars['id']);
+        $view->vars['name'] = $f->vars['name'];
         $view->vars['uploadHandler'] = $options['uploadHandler'];
         $view->vars['removeHandler'] = $options['removeHandler'];
         $view->vars['files'] =  $form->getData();
 
         $view->vars['class'] = $options['class'];
+        $view->vars['multiple'] = $options['multiple'];
         $view->vars['maxFiles'] = $options['maxFiles'];
-        $view->vars['method'] =  "POST";
-        $view->vars['choice_src'] =  "src";
-        $view->vars['withCredentials'] =  0;
-        $view->vars['thumbnailWidth'] =  120;
-        $view->vars['thumbnailHeight'] =  120;
-        $view->vars['thumbnailMethod'] =  "crop";
-        $view->vars['resizeWidth'] =  null;
-        $view->vars['resizeHeight'] =  null;
-        $view->vars['resizeMimeType'] =  null;
-        $view->vars['resizeMethod'] =  "contain";
-        $view->vars['filesizeBase'] =  1024;
-        $view->vars['headers'] =  null;
-        $view->vars['clickable'] =  true;
-        $view->vars['ignoreHiddenFiles'] =  true;
-        $view->vars['acceptedFiles'] =  null;
-        $view->vars['autoProcessQueue'] =  true;
-        $view->vars['autoQueue'] =  true;
-        $view->vars['addRemoveLinks'] =  true;
-        $view->vars['previewsContainer'] =   null;
+        $view->vars['method'] =  $options['method'];
+        $view->vars['choice_src'] =   $options["choice_src"];
+        $view->vars['withCredentials'] =  $options['withCredentials'];
+        $view->vars['thumbnailWidth'] =  $options['thumbnailWidth'];
+        $view->vars['thumbnailHeight'] =  $options['thumbnailHeight'];
+        $view->vars['thumbnailMethod'] =  $options['thumbnailMethod'];
+        $view->vars['resizeWidth'] =  $options['resizeWidth'];
+        $view->vars['resizeHeight'] =  $options['resizeHeight'];
+        $view->vars['resizeMimeType'] =  $options['resizeMimeType'];
+        $view->vars['resizeMethod'] =  $options['resizeMethod'];
+        $view->vars['filesizeBase'] =  $options['filesizeBase'];
+        $view->vars['headers'] =  $options['headers'];
+        $view->vars['ignoreHiddenFiles'] =  $options['ignoreHiddenFiles'];
+        $view->vars['acceptedFiles'] =  $options['acceptedFiles'];
+        $view->vars['autoProcessQueue'] =  $options['autoProcessQueue'];
+        $view->vars['autoQueue'] =  $options['autoQueue'];
+        $view->vars['addRemoveLinks'] =  $options['addRemoveLinks'];
+        $view->vars['previewsContainer'] =   $options['previewsContainer'];
 
 
         parent::buildView($view, $form, $options);

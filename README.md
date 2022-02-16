@@ -23,7 +23,7 @@ public function buildForm(\Symfony\Component\Form\FormBuilderInterface $builder,
     $builder->add('userFiles', DropzoneType::class, [
         'class' => File::class,
         'maxFiles' => 6,
-        'uploadHandler'=>'uploadhandler',  // route name
+        'uploadHandler'=>'uploadHandler',  // route name
         'removeHandler'=> 'removeHandler'// route name
    ]);
 }
@@ -35,7 +35,7 @@ public function buildForm(\Symfony\Component\Form\FormBuilderInterface $builder,
 
 ```php
 /**
-     * @Route("/uploadhandler", name="uploadhandler")
+     * @Route("/uploadhandler", name="uploadHandler")
      */
     public function uploadhandler(Request $request, ImageUploader $uploader) { 
         $doc = $uploader->upload($request->files->get('file'));  
@@ -71,6 +71,7 @@ class | null | File Entity
 choice_src | "src" | property that contains src
 uploadHandler | null | Symfony route name for upload | 
 removeHandler | null | Symfony route name for remove | 
+multiple | true | Set to false if you have a one to one relationship | 
 maxFiles  |  1 | If not null defines how many files this Dropzone handles.   | 
 addRemoveLinks  |  true | If true, this will add a link to every file preview to remove or cancel (if already uploading) the file. | 
 method | "POST" | Can be changed to "PUT" if necessary. |
@@ -84,7 +85,6 @@ resizeMimeType | null  |  The mime type of the resized image (before it gets upl
 resizeMethod |  "contain" |  How the images should be scaled down in case both, resizeWidth and resizeHeight are provided. Can be either contain or crop. | 
 filesizeBase  |  1024 |  -  |
 headers  |  null | An optional object to send additional headers to the server. Eg: { "My-Awesome-Header": "header value" }  | 
-clickable  |  true |  If true, the dropzone element itself will be clickable, if false nothing will be clickable. You can also pass an HTML element, a CSS selector (for multiple elements) or an array of those. In that case, all of those elements will trigger an upload when clicked.  | 
 ignoreHiddenFiles  |  true |  Whether hidden files in directories should be ignored. | 
 acceptedFiles  |  null |  Eg.: image/*,application/pdf,.psd | 
 autoProcessQueue  |  true |  If false, files will be added to the queue but the queue will not be processed automatically. This can be useful if you need some additional user input before sending files (or if you want want all files sent at once). If you're ready to send the file simply call myDropzone.processQueue(). | 
