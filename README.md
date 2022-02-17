@@ -74,6 +74,8 @@ removeHandler | null | Symfony route name for remove |
 multiple | true | Set to false if you have a one to one relationship | 
 maxFiles  |  1 | If not null defines how many files this Dropzone handles.   | 
 addRemoveLinks  |  true | If true, this will add a link to every file preview to remove or cancel (if already uploading) the file. | 
+headers  |  [] | An optional object to send additional headers to the server. Headers is array. Eg:   ['Authorization' => 'Bearer XXXXXX']  |
+formData | [] |Additional data that will be sent to FormData. Eg:   ['key' => 'value']  |
 method | "POST" | Can be changed to "PUT" if necessary. |
 withCredentials | 0 | Will be set on the XHRequest. | 
 thumbnailWidth | 120 | If null, the ratio of the image will be used to calculate it. | 
@@ -84,7 +86,6 @@ resizeHeight | null  |  See resizeWidth.  |
 resizeMimeType | null  |  The mime type of the resized image (before it gets uploaded to the server). If null the original mime type will be used. To force jpeg, for example, use image/jpeg. See resizeWidth for more information.  | 
 resizeMethod |  "contain" |  How the images should be scaled down in case both, resizeWidth and resizeHeight are provided. Can be either contain or crop. | 
 filesizeBase  |  1024 |  -  |
-headers  |  null | An optional object to send additional headers to the server. Eg: { "My-Awesome-Header": "header value" }  | 
 ignoreHiddenFiles  |  true |  Whether hidden files in directories should be ignored. | 
 acceptedFiles  |  null |  Eg.: image/*,application/pdf,.psd | 
 autoProcessQueue  |  true |  If false, files will be added to the queue but the queue will not be processed automatically. This can be useful if you need some additional user input before sending files (or if you want want all files sent at once). If you're ready to send the file simply call myDropzone.processQueue(). | 

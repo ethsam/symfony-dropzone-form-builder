@@ -49,8 +49,13 @@
             {% if filesizeBase %}
               options.filesizeBase = {{ filesizeBase }};
             {% endif %}
-            {% if headers %}
-              options.headers = '{{ headers }}';
+            {% if headers is iterable %}
+                header_object = {};
+                {% for key,value in headers %}
+                var key = '{{ key }}';
+                header_object[key] = '{{ value }}';
+                {% endfor %}
+                options.headers = header_object;
             {% endif %}
             {% if ignoreHiddenFiles %}
               options.ignoreHiddenFiles = {{ ignoreHiddenFiles }};
@@ -94,9 +99,17 @@
 
                     this.on('success', function (file, result) {
                         if (result.id) {
-                           initPrototype(result.id);
+                            file.id = result.id;
+                            initPrototype(result.id);
                         }
                     });
+                },
+                sending: function(file, xhr, formData){
+                    {% if headers is iterable %}
+                        {% for key,value in formData %}
+                        formData.append('{{ key }}', '{{ value }}');
+                        {% endfor %}
+                    {% endif %}
                 },
                 removedfile: function (file) {
                     if (file.id) {

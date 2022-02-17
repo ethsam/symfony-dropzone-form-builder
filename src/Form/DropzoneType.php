@@ -64,7 +64,8 @@ class DropzoneType extends AbstractType
             'resizeMimeType' => null,
             'resizeMethod' => "contain",
             'filesizeBase' => 1024,
-            'headers' => null,
+            'headers' => [],
+            'formData' => [],
             'ignoreHiddenFiles' => true,
             'acceptedFiles' => null,
             'autoProcessQueue' => true,
@@ -98,6 +99,7 @@ class DropzoneType extends AbstractType
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['maxFiles'] = $options['maxFiles'];
         $view->vars['method'] =  $options['method'];
+        $view->vars['formData'] =  $options['formData'];
         $view->vars['choice_src'] =   $options["choice_src"];
         $view->vars['withCredentials'] =  $options['withCredentials'];
         $view->vars['thumbnailWidth'] =  $options['thumbnailWidth'];
