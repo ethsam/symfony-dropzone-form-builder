@@ -76,7 +76,8 @@ maxFiles  |  1 | If not null defines how many files this Dropzone handles.   |
 addRemoveLinks  |  true | If true, this will add a link to every file preview to remove or cancel (if already uploading) the file. | 
 headers  |  [] | An optional object to send additional headers to the server. Headers is array. Eg:   ['Authorization' => 'Bearer XXXXXX']  |
 formData | [] |Additional data that will be sent to FormData. Eg:   ['key' => 'value']  |
-method | "POST" | Can be changed to "PUT" if necessary. |
+uploadHandlerMethod | "POST" | Can be changed to "PUT" if necessary. |
+removeHandlerMethod | "DELETE" | Can be changed to "POST" if necessary. |
 withCredentials | 0 | Will be set on the XHRequest. | 
 thumbnailWidth | 120 | If null, the ratio of the image will be used to calculate it. | 
 thumbnailHeight | 120 | The same as thumbnailWidth. If both are null, images will not be resized. | 

@@ -19,8 +19,8 @@
             {% if maxFiles %}
               options.maxFiles = {{ maxFiles }};
             {% endif %}
-            {% if method %}
-              options.method = '{{ method }}';
+            {% if uploadHandlerMethod %}
+              options.method = '{{ uploadHandlerMethod }}';
             {% endif %}
             {% if withCredentials %}
               options.withCredentials = {{ withCredentials }};
@@ -113,8 +113,15 @@
                 },
                 removedfile: function (file) {
                     if (file.id) {
-                        uri = '{{ path(removeHandler,{'id': 'file_id' }) }}';
-                        fetch(uri.replace("file_id", file.id))
+                        const uri = '{{ path(removeHandler,{'id': 'file_id' }) }}';
+                        const options_remove = {};
+                        {% if removeHandlerMethod %}
+                        options_remove.method = '{{ removeHandlerMethod }}';
+                        {% endif %}
+                        if(options.headers){
+                            options_remove.headers =  options.headers;
+                        }
+                        fetch(uri.replace("file_id", file.id),options_remove)
                     }
                     file.previewElement.remove();
                 }
