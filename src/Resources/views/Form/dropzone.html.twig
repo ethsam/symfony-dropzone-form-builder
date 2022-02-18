@@ -3,18 +3,24 @@
     <script>
         (function () {
             let dropzoneId = '{{ id|default(0) }}_dropzone';
-            let dropzoneElement = document.getElementById(dropzoneId);
+            let form_widget = document.getElementById(dropzoneId);
+            let dropzoneElement = form_widget.parentElement;
+            dropzoneElement.classList.add('dropzone');
 
             function initPrototype(id) {
+                {% if multiple %}
                 element = document.createElement('input');
                 element.type = 'hidden';
-                {% if not multiple %}
-                element.name = '{{ full_name }}[dropzone]';
-                {% else %}
                 element.name = '{{ full_name }}[dropzone][]';
-                {% endif %}
                 element.value = id;
-                dropzoneElement.closest('.form-group').append(element);
+                dropzoneElement.append(element);
+                {% else %}
+                element = document.createElement('option');
+                element.value = id;
+                element.text = id;
+                element.selected = true;
+                form_widget.append(element);
+                {% endif %}
             }
 
             options = {};
@@ -128,8 +134,16 @@
                             options_remove.headers = options.headers;
                         }
                         fetch(uri.replace("file_id", file.id), options_remove)
+                        {% if not multiple %}
+                        for (var i = 0; i < form_widget.length; i++) {
+                            if (form_widget.options[i].value === file.id)
+                                form_widget.remove(i);
+                        }
+                        {% endif %}
                     }
                     file.previewElement.remove();
+
+
                 }
             });
         })();

@@ -4,6 +4,7 @@ namespace Emrdev\SymfonyDropzone\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Emrdev\SymfonyDropzone\Transformer\DropzoneTransformer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -24,20 +25,32 @@ class DropzoneType extends AbstractType
 
     final public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add(
-            'dropzone',
-            CollectionType::class,
-            [
-                'entry_type' => HiddenType::class,
-                'label' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'attr' => [
-                    'class' => 'dropzone',
-                    'id' => 'dropzone',
-                ],
-            ]
-        )->addModelTransformer(new DropzoneTransformer($this->entityManager, $options));
+
+        if (false === $options['multiple']) {
+            $builder->add(
+                'dropzone',
+                EntityType::class,
+                [
+                    'class' => $options['class'],
+                    'label' => false,
+                    'attr' => ['style' => 'display: none;']
+                ]
+            );
+        } else {
+            $builder->add(
+                'dropzone',
+                CollectionType::class,
+                [
+                    'entry_type' => HiddenType::class,
+                    'label' => false,
+                    'allow_add' => true,
+                    'allow_delete' => true
+                ]
+            );
+        }
+
+
+        $builder->addModelTransformer(new DropzoneTransformer($this->entityManager, $options));
 
         parent::buildForm($builder, $options);
     }
@@ -94,31 +107,39 @@ class DropzoneType extends AbstractType
         $view->vars['name'] = $f->vars['name'];
         $view->vars['uploadHandler'] = $options['uploadHandler'];
         $view->vars['removeHandler'] = $options['removeHandler'];
-        $view->vars['files'] =  $form->getData();
+
+        $view->vars['files'] = null;
+
+        if (false == $options['multiple'] and $file = $form->getData()) {
+            $view->vars['files'][] = $file;
+        } elseif ($form->getData()) {
+            $view->vars['files'] = $form->getData();
+        }
+
 
         $view->vars['class'] = $options['class'];
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['maxFiles'] = $options['maxFiles'];
-        $view->vars['uploadHandlerMethod'] =  $options['uploadHandlerMethod'];
-        $view->vars['removeHandlerMethod'] =  $options['removeHandlerMethod'];
-        $view->vars['formData'] =  $options['formData'];
-        $view->vars['choice_src'] =   $options["choice_src"];
-        $view->vars['withCredentials'] =  $options['withCredentials'];
-        $view->vars['thumbnailWidth'] =  $options['thumbnailWidth'];
-        $view->vars['thumbnailHeight'] =  $options['thumbnailHeight'];
-        $view->vars['thumbnailMethod'] =  $options['thumbnailMethod'];
-        $view->vars['resizeWidth'] =  $options['resizeWidth'];
-        $view->vars['resizeHeight'] =  $options['resizeHeight'];
-        $view->vars['resizeMimeType'] =  $options['resizeMimeType'];
-        $view->vars['resizeMethod'] =  $options['resizeMethod'];
-        $view->vars['filesizeBase'] =  $options['filesizeBase'];
-        $view->vars['headers'] =  $options['headers'];
-        $view->vars['ignoreHiddenFiles'] =  $options['ignoreHiddenFiles'];
-        $view->vars['acceptedFiles'] =  $options['acceptedFiles'];
-        $view->vars['autoProcessQueue'] =  $options['autoProcessQueue'];
-        $view->vars['autoQueue'] =  $options['autoQueue'];
-        $view->vars['addRemoveLinks'] =  $options['addRemoveLinks'];
-        $view->vars['previewsContainer'] =   $options['previewsContainer'];
+        $view->vars['uploadHandlerMethod'] = $options['uploadHandlerMethod'];
+        $view->vars['removeHandlerMethod'] = $options['removeHandlerMethod'];
+        $view->vars['formData'] = $options['formData'];
+        $view->vars['choice_src'] = $options["choice_src"];
+        $view->vars['withCredentials'] = $options['withCredentials'];
+        $view->vars['thumbnailWidth'] = $options['thumbnailWidth'];
+        $view->vars['thumbnailHeight'] = $options['thumbnailHeight'];
+        $view->vars['thumbnailMethod'] = $options['thumbnailMethod'];
+        $view->vars['resizeWidth'] = $options['resizeWidth'];
+        $view->vars['resizeHeight'] = $options['resizeHeight'];
+        $view->vars['resizeMimeType'] = $options['resizeMimeType'];
+        $view->vars['resizeMethod'] = $options['resizeMethod'];
+        $view->vars['filesizeBase'] = $options['filesizeBase'];
+        $view->vars['headers'] = $options['headers'];
+        $view->vars['ignoreHiddenFiles'] = $options['ignoreHiddenFiles'];
+        $view->vars['acceptedFiles'] = $options['acceptedFiles'];
+        $view->vars['autoProcessQueue'] = $options['autoProcessQueue'];
+        $view->vars['autoQueue'] = $options['autoQueue'];
+        $view->vars['addRemoveLinks'] = $options['addRemoveLinks'];
+        $view->vars['previewsContainer'] = $options['previewsContainer'];
 
 
         parent::buildView($view, $form, $options);
