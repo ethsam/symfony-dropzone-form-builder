@@ -135,10 +135,15 @@
                         }
                         fetch(uri.replace("file_id", file.id), options_remove)
                         {% if not multiple %}
-                        for (var i = 0; i < form_widget.length; i++) {
-                            if (form_widget.options[i].value === file.id)
+                        for (var i=0; i<form_widget.length; i++) {
+                            if (form_widget.options[i].value == file.id){
                                 form_widget.remove(i);
+
+                            }
                         }
+                        {% if required == false %}
+                        form_widget.value = '';
+                        {% endif %}
                         {% endif %}
                     }
                     file.previewElement.remove();

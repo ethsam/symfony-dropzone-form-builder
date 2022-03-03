@@ -33,6 +33,8 @@ class DropzoneType extends AbstractType
                 [
                     'class' => $options['class'],
                     'label' => false,
+                    'empty_data' => $options['empty_data'],
+                    'required' => $options['required'],
                     'attr' => ['style' => 'display: none;']
                 ]
             );
@@ -62,6 +64,8 @@ class DropzoneType extends AbstractType
     {
         $resolver->setDefaults([
             'class' => null,
+            'required' => true,
+            'empty_data' => null,
             'choice_src' => 'src',
             'multiple' => true,
             'maxFiles' => 1,
@@ -118,6 +122,8 @@ class DropzoneType extends AbstractType
 
 
         $view->vars['class'] = $options['class'];
+        $view->vars['empty_data'] = $options['empty_data'];
+        $view->vars['required'] = $options['required'];
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['maxFiles'] = $options['maxFiles'];
         $view->vars['uploadHandlerMethod'] = $options['uploadHandlerMethod'];
