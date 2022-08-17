@@ -37,7 +37,7 @@ public function buildForm(\Symfony\Component\Form\FormBuilderInterface $builder,
 ## Examples route uploadHandler/removeHandler 
 
 ```php
-/**
+    /**
      * @Route("/uploadhandler", name="uploadHandler")
      */
     public function uploadhandler(Request $request, ImageUploader $uploader) { 
