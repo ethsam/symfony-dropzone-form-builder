@@ -4,7 +4,7 @@ Extends the SymfonyForm component. Adds the new form type DropzoneType
 
 ## Installing
 
-`composer require emrdev/symfony-dropzone`
+`composer require ethsam/symfony-dropzone-form-builder`
 
 
 ### Assets
@@ -25,7 +25,8 @@ public function buildForm(\Symfony\Component\Form\FormBuilderInterface $builder,
         'maxFiles' => 6,
         'uploadHandler'=>'uploadHandler',  // route name
         'removeHandler'=> 'removeHandler'// route name
-   ]);
+   ]),
+   ->add('arrayIdMedia', TextType::class, ['mapped' => false]); //hide this type after tests
 }
 ```
 
@@ -58,6 +59,35 @@ public function buildForm(\Symfony\Component\Form\FormBuilderInterface $builder,
         return new JsonResponse(true);
     }
 
+```
+
+## Example get data convert to array and findby for persist
+```php
+    public function addClassifield(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $item = new Item();
+        $form = $this->createForm(AddPropertyType::class, $item);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $item = $form->getData();
+
+            $arrayItemsMedia = explode(',',$form->get("arrayIdMedia")->getData());
+            foreach ($arrayItemsMedia as $key => $value) {
+                $mediaObject = $this->repoAttachment->findOneBy(['id' => intval($value)]);
+                $item->addAttachment($mediaObject);
+            }
+
+            $entityManager->persist($item);
+            $entityManager->flush();
+        }
+
+        return $this->render('dashboard/dashboard-add-property.html.twig', [
+            'form' => $form->createView(),
+        ]);
+
+    }
 ```
 
 
