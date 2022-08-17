@@ -1,5 +1,7 @@
 # Symfony DropzoneType
 
+test
+
 Extends the SymfonyForm component. Adds the new form type DropzoneType
 
 ## Installing
